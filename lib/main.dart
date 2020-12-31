@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './screens/home_screen.dart';
+import './screens/add_event_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +14,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: HomeScreen(),
+      routes: {
+        AddEventScreen.routeName: (ctx) => AddEventScreen(),
+      },
     );
   }
 }
-
