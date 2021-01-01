@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/add_event/input_images.dart';
 
 class AddEventScreen extends StatefulWidget {
   static const routeName = "/add-event-screen";
@@ -49,6 +50,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         child: ListView(
           children: <Widget>[
             _inputJudul(),
+            InputImages(),
           ],
         ),
       ),
