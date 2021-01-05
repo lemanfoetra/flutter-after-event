@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import '../../providers/add_event/add_image_provider.dart';
+import 'dart:io';
 
 class InputImages extends StatefulWidget {
   @override
@@ -6,6 +10,30 @@ class InputImages extends StatefulWidget {
 }
 
 class _InputImagesState extends State<InputImages> {
+  final ImagePicker _imagePicker = new ImagePicker();
+
+  AddImageProvider _addImageProvider({bool listen = false}) {
+    return Provider.of<AddImageProvider>(context, listen: listen);
+  }
+
+  Future<void> _onGetImagePressed(ImageSource imageSource) async {
+    //try {
+    PickedFile _pickedFile = await _imagePicker.getImage(
+      source: imageSource,
+    );
+    String fileName = await _addImageProvider().simpanFileImage(_pickedFile);
+    print(fileName);
+
+    await _addImageProvider().addTempImage(fileName);
+    Navigator.of(context).pop();
+    //} catch (e) {}
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,8 +54,7 @@ class _InputImagesState extends State<InputImages> {
           Container(
             height: 110,
             width: double.infinity,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+            child: Row(
               children: <Widget>[
                 InkWell(
                   onTap: () => _showDialog(),
@@ -42,12 +69,51 @@ class _InputImagesState extends State<InputImages> {
                     child: Icon(Icons.add_a_photo, color: Colors.black54),
                   ),
                 ),
-                Container(
-                  height: 100,
-                  width: 100,
-                  margin: EdgeInsets.only(right: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 1),
+                Expanded(
+                  child: FutureBuilder(
+                    future: _addImageProvider().getListTempImage(),
+                    builder: (ctx, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasData) {
+                        return Consumer<AddImageProvider>(
+                          child: Container(),
+                          builder: (ctx, provider, ch) {
+                            List<String> listData = provider.listTempImage;
+                            return listData.length <= 0
+                                ? ch
+                                : ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: listData.length,
+                                    itemBuilder: (ctx, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 5, bottom: 5),
+                                        child: Container(
+                                          height: 100,
+                                          width: 100,
+                                          child: Image.file(
+                                            File(listData[index]),
+                                            filterQuality: FilterQuality.low,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          margin: EdgeInsets.only(right: 5),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.grey, width: 0.5),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                          },
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
                   ),
                 ),
               ],
@@ -75,8 +141,10 @@ class _InputImagesState extends State<InputImages> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      _btnActonShowDialog('Camera', Icon(Icons.camera)),
-                      _btnActonShowDialog('Gallery', Icon(Icons.photo_album)),
+                      _btnActonShowDialog(
+                          'Camera', Icon(Icons.camera), ImageSource.camera),
+                      _btnActonShowDialog('Gallery', Icon(Icons.photo_album),
+                          ImageSource.gallery),
                     ],
                   ),
                 ),
@@ -88,7 +156,8 @@ class _InputImagesState extends State<InputImages> {
     );
   }
 
-  Widget _btnActonShowDialog(String title, Widget iconWidget) {
+  Widget _btnActonShowDialog(
+      String title, Widget iconWidget, ImageSource imageSource) {
     return Container(
       margin: EdgeInsets.only(left: 3, right: 5),
       decoration: BoxDecoration(
@@ -96,7 +165,7 @@ class _InputImagesState extends State<InputImages> {
         borderRadius: BorderRadius.circular(5),
       ),
       child: FlatButton(
-        onPressed: () {},
+        onPressed: () => _onGetImagePressed(imageSource),
         child: Row(
           children: <Widget>[
             iconWidget,

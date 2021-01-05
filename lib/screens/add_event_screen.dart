@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/add_event/input_images.dart';
+import 'package:provider/provider.dart';
+import '../providers/add_event/add_image_provider.dart';
+import '../models/event.dart';
 
 class AddEventScreen extends StatefulWidget {
   static const routeName = "/add-event-screen";
@@ -9,10 +12,43 @@ class AddEventScreen extends StatefulWidget {
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
+  String _judulEvent;
+  DateTime _tanggalEvent;
+  double _latitudeEvent;
+  double _longitudeEvent;
+  String _alamatEvent;
+
+  Event _event = Event(
+    id: DateTime.now().toString(),
+    judul: null,
+    tanggal: null,
+    latitude: null,
+    longitude: null,
+    alamat: null,
+  );
+
   final _formKey = GlobalKey<FormState>();
 
   void _submit() {
     bool status = _formKey.currentState.validate();
+    if (status) {
+      final _provider = Provider.of<AddImageProvider>(context);
+      Event _newEvent = Event(
+        id: _event.id,
+        judul: _judulEvent,
+        tanggal: _tanggalEvent,
+        latitude: _latitudeEvent,
+        longitude: _longitudeEvent,
+        alamat: _alamatEvent,
+        saved: 'Y',
+      );
+      
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

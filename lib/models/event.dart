@@ -7,6 +7,7 @@ class Event {
   final double latitude;
   final double longitude;
   final String alamat;
+  String saved; // N/Y
 
   Event({
     @required this.id,
@@ -15,5 +16,6 @@ class Event {
     @required this.latitude,
     @required this.longitude,
     @required this.alamat,
+    this.saved = 'N',
   });
 }

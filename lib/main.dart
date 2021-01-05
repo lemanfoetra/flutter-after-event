@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import './screens/home_screen.dart';
 import './screens/add_event_screen.dart';
+import 'package:provider/provider.dart';
+import 'providers/add_event/add_image_provider.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AddImageProvider() ),
+        ],
+        child: MyApp(),
+      ),
+    );
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
