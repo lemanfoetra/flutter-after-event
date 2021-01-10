@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/add_event/add_image_provider.dart';
 import '../models/event.dart';
 import '../screens/map_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AddEventScreen extends StatefulWidget {
   static const routeName = "/add-event-screen";
@@ -47,12 +48,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   Future<void> _getCoordinate() async {
-    var coordinate = await Navigator.of(context).push(
+    LatLng coordinate = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => MapScreen(),
       ),
     );
-    print("coodinate $coordinate");
+    setState(() {
+      _latitudeEvent = coordinate.latitude;
+      _longitudeEvent = coordinate.longitude;
+    });
   }
 
   @override
@@ -138,7 +142,25 @@ class _AddEventScreenState extends State<AddEventScreen> {
               width: double.infinity,
             ),
             color: Colors.teal,
-          )
+          ),
+          if (_latitudeEvent != null && _longitudeEvent != null)
+            Container(
+              height: 400,
+              width: double.infinity,
+              child: GoogleMap(
+                mapType: MapType.normal,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(_latitudeEvent, _longitudeEvent),
+                  zoom: 20,
+                ),
+                markers: {
+                  Marker(
+                    markerId: MarkerId('marker1'),
+                    position: LatLng(_latitudeEvent, _longitudeEvent),
+                  )
+                },
+              ),
+            ),
         ],
       ),
     );
