@@ -3,6 +3,7 @@ import '../widgets/add_event/input_images.dart';
 import 'package:provider/provider.dart';
 import '../providers/add_event/add_image_provider.dart';
 import '../models/event.dart';
+import '../screens/map_screen.dart';
 
 class AddEventScreen extends StatefulWidget {
   static const routeName = "/add-event-screen";
@@ -42,7 +43,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
         alamat: _alamatEvent,
         saved: 'Y',
       );
-      
     }
   }
 
@@ -87,6 +87,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
           children: <Widget>[
             _inputJudul(),
             InputImages(),
+            _inputLokasi(),
           ],
         ),
       ),
@@ -108,6 +109,34 @@ class _AddEventScreenState extends State<AddEventScreen> {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _inputLokasi() {
+    return Container(
+      padding: EdgeInsets.only(top: 10),
+      child: Column(
+        children: <Widget>[
+          RaisedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => MapScreen(),
+                ),
+              );
+            },
+            child: Container(
+              child: Text(
+                'Lokasi Event',
+                style: TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              width: double.infinity,
+            ),
+            color: Colors.teal,
+          )
+        ],
       ),
     );
   }
