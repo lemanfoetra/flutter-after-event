@@ -6,9 +6,10 @@ import 'package:location/location.dart';
 class MapScreen extends StatefulWidget {
   /// Jika true maka map aksinya hanya menampilkan lokasi yang sudah terpilih saja
   final bool isSelected;
+  final LatLng targetLocation;
   static const routeName = '/map-screen';
 
-  MapScreen({this.isSelected = false});
+  MapScreen({this.isSelected = false, this.targetLocation});
 
   @override
   _MapScreenState createState() => new _MapScreenState();
@@ -18,13 +19,12 @@ class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> _completer = Completer();
   Location location = new Location();
   LatLng _initialLocation = LatLng(-6.914744, 107.609811);
+  LatLng _selectedLocation;
 
   Future<void> _currentCoordinate() async {
     try {
       var _coordinate = await location.getLocation();
-      setState(() {
-        _initialLocation = LatLng(_coordinate.latitude, _coordinate.longitude);
-      });
+      _initialLocation = LatLng(_coordinate.latitude, _coordinate.longitude);
     } catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         print("hasil : Permission denied");
@@ -32,11 +32,27 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  CameraPosition get _targetPosition {
+    return CameraPosition(
+      target: widget.targetLocation != null
+          ? widget.targetLocation
+          : _initialLocation,
+      zoom: widget.targetLocation != null ? 18 : 12,
+    );
+  }
+
   CameraPosition get _newPosition {
     return CameraPosition(
       target: _initialLocation,
-      zoom: 16,
+      zoom: 22,
     );
+  }
+
+  void _useThisCoordinate(LatLng location) {
+    setState(() {
+      _selectedLocation = location;
+    });
+    print("ontapp ${_selectedLocation.latitude}");
   }
 
   Future<void> _gotoNewPosition() async {
@@ -55,18 +71,49 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Pilih Lokasi'),
+        actions: <Widget>[
+          _useThisLocation,
+        ],
       ),
       body: GoogleMap(
         mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
-          target: _initialLocation,
-          zoom: 12,
-        ),
+        initialCameraPosition: _targetPosition,
         myLocationEnabled: true,
         onMapCreated: (controller) {
           _completer.complete(controller);
         },
+        onTap: (latlng) {
+          _useThisCoordinate(latlng);
+        },
+        markers: _markers,
       ),
     );
+  }
+
+  Set<Marker> get _markers {
+    if (!widget.isSelected && _selectedLocation != null) {
+      return {
+        Marker(
+          markerId: MarkerId('m1'),
+          position: _selectedLocation,
+          infoWindow: InfoWindow(
+            title: "Gunakan Lokasi Ini?",
+          ),
+        ),
+      };
+    }
+    return null;
+  }
+
+  Widget get _useThisLocation {
+    if (!widget.isSelected && _selectedLocation != null) {
+      return IconButton(
+        icon: Icon(Icons.check),
+        onPressed: () {
+          Navigator.of(context).pop<LatLng>(_selectedLocation);
+        },
+      );
+    }
+    return Container();
   }
 }

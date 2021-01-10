@@ -46,6 +46,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
   }
 
+  Future<void> _getCoordinate() async {
+    var coordinate = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => MapScreen(),
+      ),
+    );
+    print("coodinate $coordinate");
+  }
+
   @override
   void initState() {
     super.initState();
@@ -119,13 +128,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       child: Column(
         children: <Widget>[
           RaisedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (ctx) => MapScreen(),
-                ),
-              );
-            },
+            onPressed: () => _getCoordinate(),
             child: Container(
               child: Text(
                 'Lokasi Event',
