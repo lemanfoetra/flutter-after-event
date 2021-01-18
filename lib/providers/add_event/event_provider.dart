@@ -3,20 +3,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import '../../models/event.dart';
 import '../../helpers/db_helper.dart';
-import '../../models/list_photo.dart';
 
 class EventProvider with ChangeNotifier {
   Uuid uuid = new Uuid();
-  List<Event> _listEvent = [];
-  List<ListPhoto> _listPoto = [];
-  List<Event> get listEvent => [..._listEvent];
-  List<ListPhoto> get listPhoto => [..._listPoto];
 
   /// ADD EVENT
   /// fungsi ini akan menambah ke event objek dan event table
   Future<void> addEvent(Event newEvent) async {
-    _listEvent.add(newEvent);
-
     // Simpan Event ke db
     await DBHelper.insert('event', {
       'id': newEvent.id,

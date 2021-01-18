@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'providers/add_event/add_image_provider.dart';
 import 'providers/add_event/event_provider.dart';
 import './screens/map_screen.dart';
+import './screens/event_detail_screen.dart';
 
 void main() => runApp(
       MultiProvider(
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       routes: {
         AddEventScreen.routeName: (ctx) => AddEventScreen(),
         MapScreen.routeName: (ctx) => MapScreen(),
+        EventDetailScreen.routeName : (ctx) => EventDetailScreen(),
       },
     );
   }

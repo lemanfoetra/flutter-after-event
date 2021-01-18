@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 class ListEvent extends StatelessWidget {
+  final String idEvent;
   final String judul;
   final DateTime tanggal;
   final String pathImag;
+  final Function onTap;
 
   ListEvent({
+    this.idEvent,
     this.judul,
     this.tanggal,
     this.pathImag,
+    this.onTap,
   });
 
   @override
@@ -30,6 +34,7 @@ class ListEvent extends StatelessWidget {
           ),
           title: Text(judul),
           subtitle: Text(tanggal.toString()),
+          onTap: ()=> onTap(idEvent),
         ),
       ),
     );
