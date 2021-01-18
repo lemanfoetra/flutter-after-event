@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class ListEvent extends StatelessWidget {
   final String judul;
@@ -13,17 +14,23 @@ class ListEvent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListTile(
-        leading: Container(
-          width: 80,
-          height: 90,
-          decoration: BoxDecoration(
-            color: Colors.grey,
+    return Card(
+      child: Container(
+        child: ListTile(
+          leading: Container(
+            width: 80,
+            height: 90,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+            ),
+            child: Image.file(
+              File(pathImag),
+              fit: BoxFit.cover,
+            ),
           ),
+          title: Text(judul),
+          subtitle: Text(tanggal.toString()),
         ),
-        title: Text(judul),
-        subtitle: Text(tanggal.toString()),
       ),
     );
   }

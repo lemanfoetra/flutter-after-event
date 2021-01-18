@@ -17,16 +17,14 @@ class _InputImagesState extends State<InputImages> {
   }
 
   Future<void> _onGetImagePressed(ImageSource imageSource) async {
-    //try {
-    PickedFile _pickedFile = await _imagePicker.getImage(
-      source: imageSource,
-    );
-    String fileName = await _addImageProvider().simpanFileImage(_pickedFile);
-    print(fileName);
-
-    await _addImageProvider().addTempImage(fileName);
-    Navigator.of(context).pop();
-    //} catch (e) {}
+    try {
+      PickedFile _pickedFile = await _imagePicker.getImage(
+        source: imageSource,
+      );
+      String fileName = await _addImageProvider().simpanFileImage(_pickedFile);
+      await _addImageProvider().addTempImage(fileName);
+      Navigator.of(context).pop();
+    } catch (e) {}
   }
 
   @override
@@ -71,7 +69,7 @@ class _InputImagesState extends State<InputImages> {
                 ),
                 Expanded(
                   child: FutureBuilder(
-                    future: _addImageProvider().getListTempImage(),
+                    future: _addImageProvider(listen: true).getListTempImage(),
                     builder: (ctx, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(
@@ -81,7 +79,8 @@ class _InputImagesState extends State<InputImages> {
                         return Consumer<AddImageProvider>(
                           child: Container(),
                           builder: (ctx, provider, ch) {
-                            List<String> listData = provider.listTempImage;
+                            List<String> result = snapshot.data;
+                            List<String> listData = List.from(result.reversed);
                             return listData.length <= 0
                                 ? ch
                                 : ListView.builder(

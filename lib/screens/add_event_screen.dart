@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../widgets/add_event/input_images.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import '../providers/add_event/add_image_provider.dart';
+import 'package:uuid/uuid.dart';
+import '../widgets/add_event/input_images.dart';
 import '../models/event.dart';
 import '../screens/map_screen.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../providers/add_event/event_provider.dart';
 
 class AddEventScreen extends StatefulWidget {
   static const routeName = "/add-event-screen";
@@ -14,36 +15,37 @@ class AddEventScreen extends StatefulWidget {
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
-  String _judulEvent;
-  DateTime _tanggalEvent;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _judulController = TextEditingController();
   double _latitudeEvent;
   double _longitudeEvent;
   String _alamatEvent;
 
-  Event _event = Event(
-    id: DateTime.now().toString(),
-    judul: null,
-    tanggal: null,
-    latitude: null,
-    longitude: null,
-    alamat: null,
-  );
+  /// Inisite Class Uuid untuk pembuatan unix id row table
+  Uuid uuid = new Uuid();
 
-  final _formKey = GlobalKey<FormState>();
+  /// Membuat Objek Event Provider
+  EventProvider get _eventProvider {
+    return Provider.of<EventProvider>(context, listen: false);
+  }
 
-  void _submit() {
+  /// Submit Event
+  Future<void> _submit() async {
+    final idEvent = uuid.v1();
     bool status = _formKey.currentState.validate();
     if (status) {
-      final _provider = Provider.of<AddImageProvider>(context);
       Event _newEvent = Event(
-        id: _event.id,
-        judul: _judulEvent,
-        tanggal: _tanggalEvent,
+        id: idEvent,
+        alamat: _alamatEvent,
+        judul: _judulController.text,
         latitude: _latitudeEvent,
         longitude: _longitudeEvent,
-        alamat: _alamatEvent,
-        saved: 'Y',
+        tanggal: DateTime.now(),
       );
+
+      /// save event
+      await _eventProvider.addEvent(_newEvent);
+      Navigator.of(context).pop();
     }
   }
 
@@ -53,10 +55,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
         builder: (ctx) => MapScreen(),
       ),
     );
-    setState(() {
-      _latitudeEvent = coordinate.latitude;
-      _longitudeEvent = coordinate.longitude;
-    });
+    if (coordinate != null) {
+      setState(() {
+        _latitudeEvent = coordinate.latitude;
+        _longitudeEvent = coordinate.longitude;
+      });
+    }
   }
 
   @override
@@ -120,6 +124,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               }
               return null;
             },
+            controller: _judulController,
           ),
         ),
       ),
