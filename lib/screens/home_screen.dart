@@ -73,6 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       tanggal: DateTime.parse(data[i]['tanggal']),
                       pathImag: data[i]['path_image'],
                       onTap: (idEvent) => _goToDetailScreen(idEvent),
+                      deleteFunction: (idEvent) {
+                        _showDialog();
+                      },
                     );
                   },
                 );
@@ -84,6 +87,48 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
+    );
+  }
+
+  /// Show Dialog Konfirmasi ketika Event mau di hapus
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          content: Container(
+            height: 93,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  child: Text('Yakin Hapus?'),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 25),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    border: Border.all(
+                      color: Colors.red,
+                      width: 0.5,
+                    ),
+                  ),
+                  child: FlatButton(
+                    child: Text(
+                      'Oke Hapus',
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                    onPressed: () {
+                      print('hapus');
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

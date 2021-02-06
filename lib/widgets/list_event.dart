@@ -7,6 +7,7 @@ class ListEvent extends StatelessWidget {
   final DateTime tanggal;
   final String pathImag;
   final Function onTap;
+  final Function deleteFunction;
 
   ListEvent({
     this.idEvent,
@@ -14,6 +15,7 @@ class ListEvent extends StatelessWidget {
     this.tanggal,
     this.pathImag,
     this.onTap,
+    this.deleteFunction,
   });
 
   @override
@@ -34,7 +36,11 @@ class ListEvent extends StatelessWidget {
           ),
           title: Text(judul),
           subtitle: Text(tanggal.toString()),
-          onTap: ()=> onTap(idEvent),
+          onTap: () => onTap(idEvent),
+          trailing: GestureDetector(
+            child: Icon(Icons.delete),
+            onTap: () => deleteFunction(idEvent),
+          ),
         ),
       ),
     );
