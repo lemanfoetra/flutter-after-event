@@ -50,7 +50,6 @@ class EventProvider with ChangeNotifier {
     return await DBHelper.getListEvent();
   }
 
-
   /// DELETE EVENT WITH ID
   Future<void> deleteListWithId(String id) async {
     await DBHelper.deleteEventWithId(id);
@@ -60,8 +59,19 @@ class EventProvider with ChangeNotifier {
     await DBHelper.truncateTable(table);
   }
 
-  Future<void> tes() async {
-    var result = await DBHelper.tesQuery2();
-    print(result);
+  Future<Map<String, dynamic>> getEventWithId(String idEvent) async {
+    final eventResult = await DBHelper.getEventWithId(idEvent);
+    final listPhotos = await DBHelper.getPhotosEventWithIdEvent(idEvent);
+    Map<String, dynamic> eventData;
+    if (eventResult.length > 0) {
+      eventData = eventResult[0];
+      if (listPhotos.length > 0) {
+        eventData = {
+          ...eventData,
+          'photos': listPhotos,
+        };
+      }
+    }
+    return eventData;
   }
 }

@@ -49,17 +49,23 @@ class DBHelper {
     await db.delete(table);
   }
 
-  static Future<List<Map<String, dynamic>>> tesQuery1() async {
+  static Future<List<Map<String, dynamic>>> getEventWithId(
+      String idEvent) async {
     final db = await DBHelper.database();
-    return await db.rawQuery(
-      "SELECT A.* FROM event A",
+    return await db.query(
+      'event',
+      where: "id = ?",
+      whereArgs: [idEvent],
     );
   }
 
-  static Future<List<Map<String, dynamic>>> tesQuery2() async {
+  static Future<List<Map<String, dynamic>>> getPhotosEventWithIdEvent(
+      String idEvent) async {
     final db = await DBHelper.database();
-    return await db.rawQuery(
-      "SELECT A.* FROM list_photo A",
+    return await db.query(
+      'list_photo',
+      where: "event_id = ?",
+      whereArgs: [idEvent],
     );
   }
 }
