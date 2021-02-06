@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../providers/add_event/event_provider.dart';
 import '../widgets/detail_event/grid_photos.dart';
 import '../widgets/detail_event/map_detail.dart';
@@ -55,7 +56,15 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   child: GridPhotos(dataEvent['photos']),
                 ),
                 Container(
-                  child: MapDetail(),
+                  child: dataEvent['latitude'] != null
+                      ? MapDetail(
+                          LatLng(dataEvent['latitude'], dataEvent['longitude']),
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.only(top: 30),
+                          child: Text('Tidak Ada Lokasi.'),
+                        ),
                 )
               ],
             ),
