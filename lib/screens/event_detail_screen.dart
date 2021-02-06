@@ -34,6 +34,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
   @override
   void initState() {
+    print('initstate dipanggil');
     _loadDataEvent(widget.idEvent);
     // TODO: implement initState
     super.initState();

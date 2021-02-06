@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import '../../screens/photo_preview_screen.dart';
 import 'dart:io';
 
 class GridPhotos extends StatelessWidget {
   final List<Map<String, dynamic>> photos;
 
   GridPhotos(this.photos);
+
+  void _viewImage(BuildContext context, String url) {
+    Navigator.of(context).pushNamed(PhotoPreviewScreen.routeName, arguments: url);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +44,15 @@ class GridPhotos extends StatelessWidget {
                 ),
                 width: double.infinity,
                 height: double.infinity,
-                child: Image.file(
-                  File(photos[i]['path_image']),
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.low,
+                child: InkWell(
+                  onTap: () {
+                    _viewImage(ctx, photos[i]['path_image']);
+                  },
+                  child: Image.file(
+                    File(photos[i]['path_image']),
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.low,
+                  ),
                 ),
               );
             },
