@@ -12,12 +12,13 @@ class GridPhotos extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(top: 15, bottom: 15),
-            alignment: Alignment.center,
-            child: Text(
-              'Photos',
-              style: TextStyle(
-                fontSize: 16,
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(top: 15, bottom: 10),
+            child: Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
+                'Photos',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ),

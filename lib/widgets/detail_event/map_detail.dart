@@ -19,36 +19,41 @@ class MapDetail extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(top: 15, bottom: 15),
-            alignment: Alignment.center,
-            child: Text(
-              'Location',
-              style: TextStyle(fontSize: 16),
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
+                'Location',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
           Container(
+            margin: EdgeInsets.only(left: 2, right: 2),
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.grey,
                 width: 0.5,
-              )
+              ),
             ),
             height: 300,
-            child: Center(
-              child: GoogleMap(
-                initialCameraPosition: _cameraPosition,
-                markers: {
-                  Marker(
-                    markerId: MarkerId('m1'),
-                    position: location,
-                  )
-                },
-                gestureRecognizers: Set()
-                  ..add(
-                    Factory<EagerGestureRecognizer>(
-                      () => EagerGestureRecognizer(),
-                    ),
+            child: GoogleMap(
+              initialCameraPosition: _cameraPosition,
+              markers: {
+                Marker(
+                  markerId: MarkerId('m1'),
+                  position: location,
+                )
+              },
+              gestureRecognizers: Set()
+                ..add(
+                  Factory<EagerGestureRecognizer>(
+                    () => EagerGestureRecognizer(),
                   ),
-              ),
+                ),
             ),
           )
         ],
