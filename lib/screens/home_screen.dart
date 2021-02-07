@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       pathImag: data[i]['path_image'],
                       onTap: (idEvent) => _goToDetailScreen(idEvent),
                       deleteFunction: (idEvent) {
-                        _showDialog();
+                        _showDialog(idEvent);
                       },
                     );
                   },
@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// Show Dialog Konfirmasi ketika Event mau di hapus
-  void _showDialog() {
+  void _showDialog(String idEvent) {
     showDialog(
       context: context,
       builder: (_) {
@@ -120,7 +120,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     onPressed: () {
-                      print('hapus');
+                      Provider.of<EventProvider>(context).deleteEvent(idEvent);
+                      Navigator.of(context).pop();
                     },
                   ),
                 ),

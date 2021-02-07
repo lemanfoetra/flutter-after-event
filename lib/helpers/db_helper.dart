@@ -68,4 +68,21 @@ class DBHelper {
       whereArgs: [idEvent],
     );
   }
+
+  /// DELETE EVENT DATA
+  static Future<void> deleteEvent(String idEvent) async {
+    final db = await DBHelper.database();
+    // DELETE list photo in list_photo table
+    await db.delete(
+      'list_photo',
+      where: "event_id = ?",
+      whereArgs: [idEvent],
+    );
+    // DELETE in event table
+    await db.delete(
+      'event',
+      where: "id = ?",
+      whereArgs: [idEvent],
+    );
+  }
 }

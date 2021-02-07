@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import '../../models/event.dart';
 import '../../helpers/db_helper.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class EventProvider with ChangeNotifier {
   Uuid uuid = new Uuid();
@@ -73,5 +75,30 @@ class EventProvider with ChangeNotifier {
       }
     }
     return eventData;
+  }
+
+  Future<String> get _getLokalPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  /// HAPUS EVENT
+  Future<void> deleteEvent(String idEvent) async {
+    // DELETE file photos
+    final listImagePhoto = await DBHelper.getPhotosEventWithIdEvent(idEvent);
+    if (listImagePhoto.length > 0) {
+      for (int i = 0; i < listImagePhoto.length; i++) {
+        File fileToDelete = File(listImagePhoto[i]['path_image']);
+        try {
+          await fileToDelete.delete();
+          print('success deleted files');
+        } catch (e) {
+          print("error deleted files");
+        }
+      }
+    }
+    // DELETE  di database
+    await DBHelper.deleteEvent(idEvent);
+    notifyListeners();
   }
 }
