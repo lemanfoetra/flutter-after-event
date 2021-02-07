@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 class ListEvent extends StatelessWidget {
   final String idEvent;
@@ -18,6 +19,12 @@ class ListEvent extends StatelessWidget {
     this.deleteFunction,
   });
 
+  String  _dateTime(DateTime date) {
+    final DateFormat formatter = DateFormat('dd/MM/yyyy H:mm');
+    final String formatted = formatter.format(date);
+    return formatted;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -35,7 +42,7 @@ class ListEvent extends StatelessWidget {
             ),
           ),
           title: Text(judul),
-          subtitle: Text(tanggal.toString()),
+          subtitle: Text(_dateTime(tanggal)),
           onTap: () => onTap(idEvent),
           trailing: GestureDetector(
             child: Icon(Icons.delete),

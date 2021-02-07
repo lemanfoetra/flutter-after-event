@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/foundation.dart';
 
 class MapScreen extends StatefulWidget {
   /// Jika true maka map aksinya hanya menampilkan lokasi yang sudah terpilih saja
@@ -52,7 +54,6 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       _selectedLocation = location;
     });
-    print("ontapp ${_selectedLocation.latitude}");
   }
 
   Future<void> _gotoNewPosition() async {
@@ -86,6 +87,12 @@ class _MapScreenState extends State<MapScreen> {
           _useThisCoordinate(latlng);
         },
         markers: _markers,
+        gestureRecognizers: Set()
+          ..add(
+            Factory<EagerGestureRecognizer>(
+              () => EagerGestureRecognizer(),
+            ),
+          ),
       ),
     );
   }

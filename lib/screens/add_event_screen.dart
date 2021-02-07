@@ -6,6 +6,8 @@ import '../widgets/add_event/input_images.dart';
 import '../models/event.dart';
 import '../screens/map_screen.dart';
 import '../providers/add_event/event_provider.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/foundation.dart';
 
 class AddEventScreen extends StatefulWidget {
   static const routeName = "/add-event-screen";
@@ -150,6 +152,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
           ),
           if (_latitudeEvent != null && _longitudeEvent != null)
             Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 0.5),
+              ),
+              margin: EdgeInsets.only(top: 10),
               height: 400,
               width: double.infinity,
               child: GoogleMap(
@@ -164,6 +170,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     position: LatLng(_latitudeEvent, _longitudeEvent),
                   )
                 },
+                gestureRecognizers: Set()
+                  ..add(
+                    Factory<EagerGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
+                    ),
+                  ),
               ),
             ),
         ],
